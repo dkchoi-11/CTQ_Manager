@@ -68,5 +68,4 @@ def download_data_page():
         )
 
     # 엑셀 다운로드 버튼
-    if st.button("엑셀 파일로 다운로드"):
-        download_excel(download_data, f"{download_type}.xlsx")
+    download_excel(download_data, f"{download_type}.xlsx")
