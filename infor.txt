@@ -1,0 +1,23 @@
+quality_dashboard/
+├── app.py
+├── pages/
+│   ├── __init__.py
+│   ├── data_upload.py
+│   ├── data_verification.py
+│   ├── quality_analysis.py
+│   ├── download_data.py
+│   └── settings.py
+│
+├── modules/                            # 기능별로 모듈 분리
+│   ├── data_transformer.py             # 엑셀 데이터를 변환하는 함수 모음
+│   ├── data_cleaner.py                 # 이상 데이터 필터링 함수 00
+│   ├── statistics_analyzer.py          # 기초 통계 분석 함수
+│   ├── control_chart.py                # 관리도(i-MR, Xbar, R) 생성 함수
+│   ├── capability_analysis.py          # 공정능력 분석 함수
+│   ├── boxplot_trend.py                # boxplot, 추세 분석 함수
+│   ├── file_handler.py                 # 엑셀 업로드/다운로드 관련 함수
+│   └── session_manager.py              # 세션 상태 초기화 등 관련 함수
+│
+├── assets/                             # 이미지, css, 예제 파일 등
+├── requirements.txt
+└── README.md
