@@ -1,9 +1,10 @@
+import pandas as pd
 import streamlit as st
+import io
 import numpy as np
 
 # 모듈 import
-from modules.data_cleaner import detect_outliers
-from modules.data_utils import get_spec_from_master
+from modules.data_utils import get_spec_from_master, verify_data, get_spec_for_measured_ctq
 
 def data_verification_page():
     """이상 데이터 검증 페이지 (Anomaly Data Verification Page)"""
@@ -18,27 +19,37 @@ def data_verification_page():
 
     # 이상치 탐지 방법 선택
     method = st.selectbox("이상치 탐지 방법 선택",
-                          ['IQR 방법', '규격 한계', 'Z-점수'])
+                          ['규격 한계', 'IQR 방법', 'Z-점수'])
+
+    st.subheader("📋 관리번호별 스펙 정보 (USL, LSL, Target, UCL, LCL)")
+    spec_df = get_spec_for_measured_ctq()
+    if not spec_df.empty:
+        st.dataframe(spec_df)
+    else:
+        st.info("스펙 정보를 찾을 수 없습니다.")
 
     # 이상치 탐지 옵션
     if method == '규격 한계':
-        col1, col2 = st.columns(2)
-        with col1:
-            usl = st.number_input("상한 규격 (USL)", value=np.inf)
-        with col2:
-            lsl = st.number_input("하한 규격 (LSL)", value=-np.inf)
+        verify_result_df = verify_data()
 
-        # 규격 한계 기반 이상치 탐지
-        outliers_df = detect_outliers(df, method='spec_limit', usl=usl, lsl=lsl)
-    elif method == 'IQR 방법':
-        outliers_df = detect_outliers(df, method='iqr')
-    else:  # Z-점수
-        outliers_df = detect_outliers(df, method='z_score')
+        st.subheader("📊 스펙 초과 검출 결과")
+        st.write(f"총 데이터 수: {len(df)}")
+        st.write(f"스펙 초과된 데이터 수: {len(verify_result_df)}")
 
-    # 이상치 결과 표시
-    st.subheader("이상치 검출 결과")
-    if outliers_df.empty:
-        st.success("이상치가 검출되지 않았습니다.")
-    else:
-        st.dataframe(outliers_df)
-        st.write(f"총 이상치 수: {len(outliers_df)}")
+        if verify_result_df.empty:
+            st.success("✅ 스펙 초과된 데이터 없음")
+        else:
+            st.error("❗스펙 초과된 데이터가 존재합니다.")
+            st.dataframe(verify_result_df)
+
+            # 엑셀로 다운로드 버튼 추가
+            output = io.BytesIO()
+            with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+                verify_result_df.to_excel(writer, index=False, sheet_name='Spec Over Data')
+
+            st.download_button(
+                label="📥 스펙 초과 데이터 Excel 다운로드",
+                data=output.getvalue(),
+                file_name="spec_over_data.xlsx",
+                mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            )

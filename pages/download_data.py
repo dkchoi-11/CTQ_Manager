@@ -3,7 +3,6 @@ import pandas as pd
 from io import BytesIO
 
 # 모듈 import
-from modules.data_cleaner import detect_outliers, get_data_quality_report
 from modules.file_handler import (
     clean_string,
     get_excel_download_buffer,
@@ -50,9 +49,7 @@ def download_data_page():
 
     # 다운로드 옵션
     download_type = st.selectbox("다운로드할 데이터 선택", [
-        "변환된 데이터",
-        "이상치 데이터",
-        "품질 분석 보고서"
+        "변환된 데이터"
     ])
 
     if download_type == "변환된 데이터":

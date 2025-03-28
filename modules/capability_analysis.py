@@ -1,115 +1,67 @@
-"""
-공정능력 분석 함수 모음
-"""
 import numpy as np
-import pandas as pd
-import scipy.stats as stats
 import plotly.graph_objs as go
-import streamlit as st
+from scipy.stats import norm
 
 
 def calculate_capability_indices(data: np.ndarray, usl: float, lsl: float):
     """
-    공정능력 지수 계산
-
-    Args:
-        data (np.ndarray): 입력 데이터
-        usl (float): 상한 규격
-        lsl (float): 하한 규격
-
-    Returns:
-        dict: 공정능력 지수
+    공정능력지수 계산 (Cp, Cpk)
     """
-    # 데이터 기술 통계량
     mean = np.mean(data)
     std = np.std(data, ddof=1)
 
-    # 공정능력 지수 계산
     Cp = (usl - lsl) / (6 * std)
-    Cpk = min(
-        (usl - mean) / (3 * std),
-        (mean - lsl) / (3 * std)
-    )
-
-    # 단기/장기 변동성 고려 (잠정적)
-    Pp = (usl - lsl) / (6 * std)
-    Ppk = min(
-        (usl - mean) / (3 * std),
-        (mean - lsl) / (3 * std)
-    )
+    Cpk = min((usl - mean) / (3 * std), (mean - lsl) / (3 * std))
 
     return {
         'mean': mean,
         'std': std,
         'Cp': Cp,
-        'Cpk': Cpk,
-        'Pp': Pp,
-        'Ppk': Ppk
+        'Cpk': Cpk
     }
 
 
 def process_capability_histogram(data: np.ndarray, usl: float, lsl: float):
     """
-    공정능력 히스토그램 생성
-
-    Args:
-        data (np.ndarray): 입력 데이터
-        usl (float): 상한 규격
-        lsl (float): 하한 규격
-
-    Returns:
-        plotly 그래프 객체
+    공정능력 히스토그램 + 정규분포 곡선 시각화
     """
-    cap_indices = calculate_capability_indices(data, usl, lsl)
+    stats = calculate_capability_indices(data, usl, lsl)
+    mean, std = stats['mean'], stats['std']
 
-    # 히스토그램 생성
+    # 히스토그램 설정
     hist_trace = go.Histogram(
         x=data,
-        name='데이터 분포',
-        opacity=0.75
+        nbinsx=20,
+        histnorm='probability density',
+        name='측정값 분포',
+        opacity=0.6
     )
 
     # 정규분포 곡선
-    x = np.linspace(min(data), max(data), 100)
-    pdf = stats.norm.pdf(x, cap_indices['mean'], cap_indices['std'])
-    pdf_trace = go.Scatter(
-        x=x,
-        y=pdf * len(data) * (max(data) - min(data)) / 10,  # 히스토그램과 스케일 맞추기
+    x_range = np.linspace(mean - 4*std, mean + 4*std, 500)
+    pdf = norm.pdf(x_range, mean, std)
+    bin_width = (max(data) - min(data)) / 20
+    pdf_scaled = pdf * len(data) * bin_width
+
+    normal_curve = go.Scatter(
+        x=x_range,
+        y=pdf_scaled,
         mode='lines',
-        name='정규분포 곡선'
+        name='정규분포 곡선',
+        line=dict(color='blue', dash='dot')
     )
 
-    # 규격 한계선
-    usl_trace = go.Scatter(
-        x=[usl, usl],
-        y=[0, np.max(pdf) * len(data)],
-        mode='lines',
-        name='USL',
-        line=dict(color='red', dash='dot')
-    )
-    lsl_trace = go.Scatter(
-        x=[lsl, lsl],
-        y=[0, np.max(pdf) * len(data)],
-        mode='lines',
-        name='LSL',
-        line=dict(color='red', dash='dot')
-    )
+    # 사양 상한/하한선
+    usl_line = go.Scatter(x=[usl, usl], y=[0, max(pdf_scaled)], name='USL', line=dict(color='red', dash='dash'))
+    lsl_line = go.Scatter(x=[lsl, lsl], y=[0, max(pdf_scaled)], name='LSL', line=dict(color='red', dash='dash'))
 
-    layout = go.Layout(
-        title='공정능력 히스토그램',
+    # 그래프 구성
+    fig = go.Figure(data=[hist_trace, normal_curve, usl_line, lsl_line])
+    fig.update_layout(
+        title='공정능력 분석 히스토그램',
         xaxis_title='측정값',
         yaxis_title='빈도',
-        annotations=[
-            dict(
-                x=0.5, y=1.1,
-                text=f'Cp: {cap_indices["Cp"]:.2f}, Cpk: {cap_indices["Cpk"]:.2f}',
-                showarrow=False,
-                xref='paper',
-                yref='paper'
-            )
-        ]
+        bargap=0.05
     )
 
-    fig = go.Figure(data=[hist_trace, pdf_trace, usl_trace, lsl_trace], layout=layout)
-
-    return fig, cap_indices
+    return fig, stats

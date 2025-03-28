@@ -105,8 +105,10 @@ def trend_analysis(data: pd.DataFrame, time_column: str, value_columns: list = N
     fig = go.Figure()
     for col in value_columns:
         # 선형 회귀 추세선 계산
-        x = data[time_column].astype(int) / 10 ** 9  # timestamp to seconds
+        # 타임스탬프를 안전하게 숫자로 변환
+        x = (data[time_column] - data[time_column].min()).dt.total_seconds()
         y = data[col]
+
         slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
 
         # 추세선 데이터 생성
@@ -162,7 +164,7 @@ def perform_comprehensive_trend_analysis(data: pd.DataFrame, time_column: str, v
     trend_results = {}
     for col in value_columns:
         # 시간 데이터를 초 단위로 변환
-        x = data[time_column].astype(int) / 10 ** 9
+        x = data[time_column].astype('int64') / 10 ** 9
         y = data[col]
 
         # 선형 회귀 분석
