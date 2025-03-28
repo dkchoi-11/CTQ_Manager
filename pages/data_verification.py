@@ -34,6 +34,11 @@ def data_verification_page():
 
         st.subheader("📊 스펙 초과 검출 결과")
         st.write(f"총 데이터 수: {len(df)}")
+
+        if verify_result_df is None:
+            st.warning("스펙 검증 결과를 가져올 수 없습니다.")
+            return
+
         st.write(f"스펙 초과된 데이터 수: {len(verify_result_df)}")
 
         if verify_result_df.empty:

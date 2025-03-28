@@ -86,7 +86,7 @@ def quality_analysis_page():
     with tab3:
         st.subheader("🏭 공정능력 분석")
         if usl is not None and lsl is not None and target is not None:
-            cap_fig, cap_indices = process_capability_histogram(filtered_df['측정값'].to_numpy(), usl, lsl, target)
+            cap_fig, cap_indices = process_capability_histogram(filtered_df['측정값'].to_numpy(), usl, lsl)
             st.plotly_chart(cap_fig, use_container_width=True)
             st.json(cap_indices)
         else:
