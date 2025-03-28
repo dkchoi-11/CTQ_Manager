@@ -3,6 +3,7 @@ import numpy as np
 
 # 모듈 import
 from modules.data_cleaner import detect_outliers
+from modules.data_utils import get_spec_from_master
 
 def data_verification_page():
     """이상 데이터 검증 페이지 (Anomaly Data Verification Page)"""

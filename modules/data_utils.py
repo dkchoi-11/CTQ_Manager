@@ -1,9 +1,5 @@
 import pandas as pd
 import streamlit as st
-from astropy.cosmology import available
-
-from modules.data_transformer import transform_data
-
 
 # master_data에서 spec (USL,LSL, Target, UCL, LCL) 가져오기
 def get_spec_from_master():
@@ -31,7 +27,7 @@ def get_spec_from_master():
         st.warning("Master 파일에 일부 품질 관리 기준 컬럼이 누락되었습니다.")
 
     result_df = filtered_master[available_columns].drop_duplicates()
-    result_df result_df
+    return result_df
 
 
 

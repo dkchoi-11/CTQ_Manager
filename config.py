@@ -3,12 +3,14 @@
 """
 
 # 품질 관리 임계값 설정
+'''
 QUALITY_SETTINGS = {
     'USL': 10.5,  # Upper Specification Limit
     'LSL': 9.5,   # Lower Specification Limit
     'UCL': 11.0,  # Upper Control Limit
     'LCL': 9.0,   # Lower Control Limit
 }
+'''
 
 # 분석 옵션
 ANALYSIS_OPTIONS = {
