@@ -7,7 +7,7 @@ project_root = os.path.abspath(os.path.dirname(__file__))
 sys.path.insert(0, project_root)
 
 # 페이지 모듈 import
-from pages import (
+from st_pages import (
     data_upload_page,
     data_verification_page,
     quality_analysis_page,
