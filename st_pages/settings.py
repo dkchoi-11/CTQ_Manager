@@ -5,9 +5,9 @@ from modules.session_manager import reset_session_state
 
 def settings_page():
     """설정 페이지 (Settings Page)"""
-    st.header("설정")
+    st.header("Setting")
 
     # 세션 초기화 버튼
-    if st.button("모든 세션 데이터 초기화", type="primary"):
+    if st.button("Initialize all session data", type="primary"):
         reset_session_state()
-        st.success("세션 데이터가 초기화되었습니다.")
+        st.success("Session data initialized.")

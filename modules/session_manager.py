@@ -50,7 +50,7 @@ def reset_session_state():
     initialize_session_state()
     
     # 사용자에게 초기화 완료 알림
-    st.success("모든 세션 데이터가 초기화되었습니다.")
+    st.success("Session data initialized.")
 
 def update_session_data(key, value):
     """
@@ -84,7 +84,7 @@ def display_session_reset_button():
     
     사이드바에 세션 초기화 버튼 생성
     """
-    if st.sidebar.button("🔄 세션 초기화", help="모든 데이터와 분석 결과를 초기화합니다."):
+    if st.sidebar.button("🔄 세션 초기화", help="Initialize all data and analysis results."):
         reset_session_state()
 
 def main():
