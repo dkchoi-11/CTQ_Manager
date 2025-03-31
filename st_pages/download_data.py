@@ -39,7 +39,7 @@ def save_to_excel(df: pd.DataFrame) -> None:
 
 def download_data_page():
     """데이터 다운로드 페이지 (Data Download Page)"""
-    st.header("데이터 다운로드")
+    st.header("변환 데이터 다운로드")
 
     # 변환된 데이터 확인
     if st.session_state.transformed_data is None or st.session_state.transformed_data.empty:

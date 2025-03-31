@@ -30,7 +30,7 @@ def main():
             "데이터 업로드&변환",
             "데이터 검증",
             "품질 분석",
-            "데이터 다운로드",
+            "변환 데이터 다운로드",
             "설정"
         ]
     )
@@ -48,7 +48,7 @@ def main():
         data_verification_page()
     elif menu == "품질 분석":
         quality_analysis_page()
-    elif menu == "데이터 다운로드":
+    elif menu == "변환 데이터 다운로드":
         download_data_page()
     elif menu == "설정":
         settings_page()
