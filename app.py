@@ -59,5 +59,12 @@ def main():
             del st.session_state[key]
         st.rerun()
 
+    # 푸터
+    st.markdown("---")
+    st.markdown("© CTQ Data 관리 대시보드 | Last Update: 2025/03/31")
+    st.markdown("문의: [daekyu.choi@newoptics.net](mailto:daekyu.choi@newoptics.net)")
+
+
+
 if __name__ == "__main__":
     main()
