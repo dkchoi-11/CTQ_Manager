@@ -5,20 +5,31 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 import streamlit as st
+import re
 from typing import Optional, List, Dict, Union
 
 
 # 날짜 형식이 가장 많이 들어있는 열의 인덱스를 찾는 함수
 def find_date_start_col(df: pd.DataFrame, sample_row_count: int = 10) -> int:
     def is_date(x: Union[str, datetime]) -> bool:
-        try:
-            pd.to_datetime(x)
+        if not isinstance(x, str):
+            return False
+        x = x.strip()
+
+        # 날짜 형식 패턴 (예: 1/6, 01-07-2024, 2024.01.08)
+        date_pattern = re.compile(r'^\d{1,4}[/.-]\d{1,2}([/.-]\d{2,4})?$')
+
+        if date_pattern.match(x):
             return True
+
+        try:
+            converted = pd.to_datetime(x, errors='coerce')
+            return pd.notna(converted)
         except:
             return False
 
     date_counts = [
-        sum(df.iloc[:sample_row_count, col_idx].apply(is_date))
+        sum(df.iloc[:sample_row_count, col_idx].astype(str).apply(is_date))
         for col_idx in range(df.shape[1])
     ]
     best_col = date_counts.index(max(date_counts))
@@ -26,6 +37,7 @@ def find_date_start_col(df: pd.DataFrame, sample_row_count: int = 10) -> int:
     if date_counts[best_col] == 0:
         raise ValueError("No date column found")
 
+    print(best_col)
     return best_col
 
 # 날짜가 포함된 첫 번째 행의 인덱스를 찾는 함수
@@ -85,7 +97,7 @@ def extract_measurement_data(
             if col >= df.shape[1]:
                 continue
             cell_value = df.iloc[i, col]
-            if str(cell_value).strip() == '측정POINT':
+            if "POINT" in str(cell_value).strip().upper():
                 ctq_col = col + 1
                 if ctq_col < df.shape[1]:
                     ctq_name = df.iloc[i, ctq_col]
