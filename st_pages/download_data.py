@@ -9,6 +9,7 @@ from modules.file_handler import (
     generate_filename,
     download_excel
 )
+from modules.data_utils import verify_data
 
 # 문자열 변환용 함수
 def clean_string(s):
@@ -41,8 +42,14 @@ def download_data_page():
     st.header("데이터 다운로드")
 
     # 변환된 데이터 확인
-    if 'transformed_data' not in st.session_state:
+    if st.session_state.transformed_data is None or st.session_state.transformed_data.empty:
         st.warning("먼저 데이터를 업로드하고 변환해주세요.")
+        return
+
+    # 스펙 오버 데이타가 포함되어 있으면 다운로드 안되게...
+    verify_result_df = verify_data()
+    if not verify_result_df.empty:
+        st.warning("스페 오버 데이타가 포함되어 있어 다운로드 할 수 없어요. 데이타 확인 하세요")
         return
 
     df = st.session_state.transformed_data

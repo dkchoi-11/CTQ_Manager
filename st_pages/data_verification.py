@@ -3,6 +3,7 @@ import streamlit as st
 import io
 import numpy as np
 
+from modules import transform_data
 # 모듈 import
 from modules.data_utils import get_spec_from_master, verify_data, get_spec_for_measured_ctq
 
@@ -11,9 +12,10 @@ def data_verification_page():
     st.header("이상 데이터 검증")
 
     # 변환된 데이터 확인
-    if 'transformed_data' not in st.session_state:
+    if st.session_state.transformed_data is None or st.session_state.transformed_data.empty:
         st.warning("먼저 데이터를 업로드하고 변환해주세요.")
         return
+
 
     df = st.session_state.transformed_data
 

@@ -12,7 +12,7 @@ def quality_analysis_page():
     """품질 분석 페이지 (Quality Analysis Page)"""
     st.header("📊 품질 분석")
 
-    if 'transformed_data' not in st.session_state:
+    if st.session_state.transformed_data is None or st.session_state.transformed_data.empty:
         st.warning("먼저 데이터를 업로드하고 변환해주세요.")
         return
 
