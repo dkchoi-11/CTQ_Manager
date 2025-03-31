@@ -33,7 +33,7 @@ def process_capability_histogram(data: np.ndarray, usl: float, lsl: float):
         x=data,
         nbinsx=20,
         histnorm='probability density',
-        name='측정값 분포',
+        name='Measurement Distribution',
         opacity=0.6
     )
 
@@ -47,7 +47,7 @@ def process_capability_histogram(data: np.ndarray, usl: float, lsl: float):
         x=x_range,
         y=pdf_scaled,
         mode='lines',
-        name='정규분포 곡선',
+        name='Normal distribution curve',
         line=dict(color='blue', dash='dot')
     )
 
@@ -58,9 +58,9 @@ def process_capability_histogram(data: np.ndarray, usl: float, lsl: float):
     # 그래프 구성
     fig = go.Figure(data=[hist_trace, normal_curve, usl_line, lsl_line])
     fig.update_layout(
-        title='공정능력 분석 히스토그램',
-        xaxis_title='측정값',
-        yaxis_title='빈도',
+        title='Capability Analysis Histogram',
+        xaxis_title='Measurements',
+        yaxis_title='frequency',
         bargap=0.05
     )
 

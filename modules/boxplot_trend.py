@@ -32,9 +32,9 @@ def create_boxplot(data: pd.DataFrame, columns: list = None):
         ))
 
     fig.update_layout(
-        title='박스 플롯 분석',
-        yaxis_title='값',
-        xaxis_title='변수',
+        title='box plot analysis',
+        yaxis_title='Value',
+        xaxis_title='variable',
         height=600,
         width=800
     )
@@ -119,7 +119,7 @@ def trend_analysis(data: pd.DataFrame, time_column: str, value_columns: list = N
             x=data[time_column],
             y=data[col],
             mode='lines+markers',
-            name=f'{col} (실제 데이터)'
+            name=f'{col} (actual data)'
         ))
 
         # 추세선 추가
@@ -127,14 +127,14 @@ def trend_analysis(data: pd.DataFrame, time_column: str, value_columns: list = N
             x=data[time_column],
             y=trend_line,
             mode='lines',
-            name=f'{col} 추세선 (R² = {r_value ** 2:.4f})',
+            name=f'{col} Trend line (R² = {r_value ** 2:.4f})',
             line=dict(dash='dot')
         ))
 
     fig.update_layout(
-        title='시계열 추세 분석',
-        xaxis_title='시간',
-        yaxis_title='값',
+        title='Time series trend analysis',
+        xaxis_title='Time',
+        yaxis_title='Value',
         height=600,
         width=1000
     )
@@ -204,7 +204,7 @@ def main():
 
     # 이상치 탐지
     outliers = detect_outliers_iqr(test_data, ['value1', 'value2'])
-    print("이상치 정보:", outliers)
+    print("Outlier information:", outliers)
 
     # 추세 분석
     trend_fig = trend_analysis(test_data, 'timestamp', ['value1', 'value2'])
@@ -212,7 +212,7 @@ def main():
 
     # 종합 추세 분석
     trend_report = perform_comprehensive_trend_analysis(test_data, 'timestamp', ['value1', 'value2'])
-    print("추세 분석 리포트:", trend_report)
+    print("rend Analysis Report:", trend_report)
 
 
 if __name__ == '__main__':

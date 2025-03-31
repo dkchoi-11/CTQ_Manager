@@ -10,20 +10,20 @@ import numpy as np
 
 def quality_analysis_page():
     """품질 분석 페이지 (Quality Analysis Page)"""
-    st.header("📊 품질 분석")
+    st.header("📊 Quality Analysis")
 
     if st.session_state.transformed_data is None or st.session_state.transformed_data.empty:
-        st.warning("먼저 데이터를 업로드하고 변환해주세요.")
+        st.warning("Please upload and convert the data first.")
         return
 
     df = st.session_state.transformed_data
 
     ctq_options = df['관리번호'].unique().tolist()
-    selected_ctq = st.selectbox("분석할 관리번호 선택", ctq_options)
+    selected_ctq = st.selectbox("Select an management number to analyze", ctq_options)
     filtered_df = df[df['관리번호'] == selected_ctq]
 
     if filtered_df.empty:
-        st.info("선택한 관리번호에 대한 데이터가 없습니다.")
+        st.info("There is no data for the selected management number.")
         return
 
     filtered_spec = get_spec_for_measured_ctq()
@@ -33,40 +33,40 @@ def quality_analysis_page():
     lsl = selected_spec['LSL'].values[0] if 'LSL' in selected_spec.columns and not selected_spec['LSL'].isnull().all() else None
     target = selected_spec['Target'].values[0] if 'Target' in selected_spec.columns and not selected_spec['Target'].isnull().all() else None
 
-    st.write(f"🔍 선택한 CTQ: **{selected_ctq}**")
-    st.write(f"데이터 수: {len(filtered_df)}")
+    st.write(f"🔍 Selected CTQ: **{selected_ctq}**")
+    st.write(f"Number of data: {len(filtered_df)}")
 
     tab1, tab2, tab3, tab4 = st.tabs([
-        "기본 통계",
-        "관리도",
-        "공정능력 분석",
-        "박스플롯 및 추세 분석"
+        "basic statistics",
+        "control chart",
+        "Process capability analysis",
+        "boxplot and trend analysis"
     ])
 
     with tab1:
-        st.subheader("📌 기본 통계 분석")
+        st.subheader("📌 Basic Statistical Analysis")
         stats_df = basic_statistics(filtered_df[['측정값']])
         st.dataframe(stats_df)
 
-        st.subheader("📈 정규성 검정")
+        st.subheader("📈 normality test")
         normal_df = normality_test(filtered_df[['측정값']])
         st.dataframe(normal_df)
 
     with tab2:
-        st.subheader("📉 I-MR 관리도")
+        st.subheader("📉 I-MR control chart")
         imr_x = filtered_df['측정일자'].tolist() if '측정일자' in filtered_df.columns else list(range(len(filtered_df)))
         fig, imr_summary = create_imr_chart(filtered_df['측정값'].to_numpy(), x=imr_x, return_summary=True, show_outliers=True)
         st.plotly_chart(fig, use_container_width=True)
-        st.markdown("**관리도 요약 결과**")
+        st.markdown("**Chart Summary Results**")
         st.dataframe(imr_summary)
 
-        st.subheader("📏 X-bar & R 관리도")
+        st.subheader("📏 X-bar & R control chart")
         group_size = st.number_input("샘플 크기 (X-bar 관리도용)", min_value=2, max_value=20, value=5)
         values = filtered_df['측정값'].to_numpy()
         num_groups = len(values) // group_size
 
         if num_groups < 2:
-            st.warning("X-bar 관리도를 그리려면 최소 2개 이상의 샘플 그룹이 필요합니다.")
+            st.warning("At least two sample groups are required to draw an X-bar chart.")
         else:
             grouped_data = values[:num_groups * group_size].reshape(num_groups, group_size)
             group_dates = (
@@ -77,29 +77,29 @@ def quality_analysis_page():
             )
             xbar_fig, r_fig, xbar_summary, r_summary = create_xbar_r_chart(grouped_data, group_size, x=group_dates, return_summary=True, show_outliers=True)
             st.plotly_chart(xbar_fig, use_container_width=True)
-            st.markdown("**X-bar 요약 결과**")
+            st.markdown("**X-bar Summary Results**")
             st.dataframe(xbar_summary)
             st.plotly_chart(r_fig, use_container_width=True)
-            st.markdown("**R 요약 결과**")
+            st.markdown("**R Summary Results**")
             st.dataframe(r_summary)
 
     with tab3:
-        st.subheader("🏭 공정능력 분석")
+        st.subheader("🏭 Process capability analysis")
         if usl is not None and lsl is not None and target is not None:
             cap_fig, cap_indices = process_capability_histogram(filtered_df['측정값'].to_numpy(), usl, lsl)
             st.plotly_chart(cap_fig, use_container_width=True)
             st.json(cap_indices)
         else:
-            st.warning("USL, LSL 또는 Target 값이 누락되어 공정능력 분석을 수행할 수 없습니다.")
+            st.warning("USL, LSL, or Target values are missing and capability analysis cannot be performed.")
 
     with tab4:
-        st.subheader("📦 박스플롯 분석")
+        st.subheader("📦 box plot analysis")
         fig = create_boxplot(filtered_df[['측정값']])
         st.plotly_chart(fig, use_container_width=True)
 
-        st.subheader("📈 추세 분석")
+        st.subheader("📈 Trend Analysis")
         if '측정일자' in filtered_df.columns:
             trend_fig = trend_analysis(filtered_df, '측정일자', ['측정값'])
             st.plotly_chart(trend_fig, use_container_width=True)
         else:
-            st.warning("추세 분석을 위한 '측정일자' 컬럼이 없습니다.")
+            st.warning("There is no 'Measurement Date' column for trend analysis.")

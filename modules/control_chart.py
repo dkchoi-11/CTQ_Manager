@@ -25,13 +25,13 @@ def create_imr_chart(data, x=None, return_summary=False, show_outliers=False):
     fig.add_trace(go.Scatter(x=x_vals, y=[ucl] * len(data), mode='lines', name='UCL', line=dict(color='red', dash='dot')))
     fig.add_trace(go.Scatter(x=x_vals, y=[lcl] * len(data), mode='lines', name='LCL', line=dict(color='red', dash='dot')))
 
-    fig.update_layout(title='I-MR 관리도', xaxis_title='측정일자' if x is not None else '순서', yaxis_title='값')
+    fig.update_layout(title='I-MR control chart', xaxis_title='Date' if x is not None else '순서', yaxis_title='값')
 
     summary = {
-        '평균': [mean],
+        'Mean': [mean],
         'UCL': [ucl],
         'LCL': [lcl],
-        '이상치 수': [int(np.sum(outliers))]
+        'outlier number': [int(np.sum(outliers))]
     }
 
     if return_summary:
@@ -69,7 +69,7 @@ def create_xbar_r_chart(data, sample_size, x=None, return_summary=False, show_ou
     xbar_fig.add_trace(go.Scatter(x=x_vals, y=[xbar_bar]*len(sample_means), mode='lines', name='중심선', line=dict(dash='dash', color='green')))
     xbar_fig.add_trace(go.Scatter(x=x_vals, y=[xbar_ucl]*len(sample_means), mode='lines', name='UCL', line=dict(dash='dot', color='red')))
     xbar_fig.add_trace(go.Scatter(x=x_vals, y=[xbar_lcl]*len(sample_means), mode='lines', name='LCL', line=dict(dash='dot', color='red')))
-    xbar_fig.update_layout(title='X-bar 관리도', xaxis_title='측정일자' if x is not None else '샘플 그룹', yaxis_title='평균')
+    xbar_fig.update_layout(title='X-bar control chart', xaxis_title='측정일자' if x is not None else '샘플 그룹', yaxis_title='평균')
 
     r_fig = go.Figure()
     r_fig.add_trace(go.Scatter(x=x_vals, y=sample_ranges, mode='lines+markers', name='샘플 범위'))
@@ -78,11 +78,11 @@ def create_xbar_r_chart(data, sample_size, x=None, return_summary=False, show_ou
     r_fig.add_trace(go.Scatter(x=x_vals, y=[r_bar]*len(sample_ranges), mode='lines', name='중심선', line=dict(dash='dash', color='green')))
     r_fig.add_trace(go.Scatter(x=x_vals, y=[r_ucl]*len(sample_ranges), mode='lines', name='UCL', line=dict(dash='dot', color='red')))
     r_fig.add_trace(go.Scatter(x=x_vals, y=[r_lcl]*len(sample_ranges), mode='lines', name='LCL', line=dict(dash='dot', color='red')))
-    r_fig.update_layout(title='R 관리도', xaxis_title='측정일자' if x is not None else '샘플 그룹', yaxis_title='범위')
+    r_fig.update_layout(title='R control chart', xaxis_title='Date' if x is not None else 'Sample Group', yaxis_title='Range')
 
     if return_summary:
-        xbar_summary = pd.DataFrame({'평균': [xbar_bar], 'UCL': [xbar_ucl], 'LCL': [xbar_lcl], '이상치 수': [int(np.sum(xbar_outliers))]})
-        r_summary = pd.DataFrame({'평균': [r_bar], 'UCL': [r_ucl], 'LCL': [r_lcl], '이상치 수': [int(np.sum(r_outliers))]})
+        xbar_summary = pd.DataFrame({'Mean': [xbar_bar], 'UCL': [xbar_ucl], 'LCL': [xbar_lcl], '이상치 수': [int(np.sum(xbar_outliers))]})
+        r_summary = pd.DataFrame({'Mean': [r_bar], 'UCL': [r_ucl], 'LCL': [r_lcl], '이상치 수': [int(np.sum(r_outliers))]})
         return xbar_fig, r_fig, xbar_summary, r_summary
 
     return xbar_fig, r_fig

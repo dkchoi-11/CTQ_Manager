@@ -39,27 +39,28 @@ def save_to_excel(df: pd.DataFrame) -> None:
 
 def download_data_page():
     """데이터 다운로드 페이지 (Data Download Page)"""
-    st.header("변환 데이터 다운로드")
+    st.header("Download conversion data")
 
     # 변환된 데이터 확인
     if st.session_state.transformed_data is None or st.session_state.transformed_data.empty:
-        st.warning("먼저 데이터를 업로드하고 변환해주세요.")
+        st.warning("Please upload and convert the data first.")
         return
 
     # 스펙 오버 데이타가 포함되어 있으면 다운로드 안되게...
     verify_result_df = verify_data()
     if not verify_result_df.empty:
-        st.warning("스페 오버 데이타가 포함되어 있어 다운로드 할 수 없어요. 데이타 확인 하세요")
+        st.warning("You can't download it because it includes Spec ovor Data. Check the data")
         return
 
     df = st.session_state.transformed_data
+    df['2차업체명'] = df['2차업체명'].replace('nan', '')
 
     # 다운로드 옵션
-    download_type = st.selectbox("다운로드할 데이터 선택", [
-        "변환된 데이터"
+    download_type = st.selectbox("Select data to download", [
+        "converted data"
     ])
 
-    if download_type == "변환된 데이터":
+    if download_type == "converted data":
         download_data = df
     elif download_type == "이상치 데이터":
         # 이전에 검출된 이상치 데이터 또는 새로 탐지

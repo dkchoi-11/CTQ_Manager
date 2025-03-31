@@ -18,20 +18,20 @@ from st_pages import (
 def main():
     # 페이지 타이틀 및 아이콘 설정
     st.set_page_config(
-        page_title="품질 분석 대시보드",
+        page_title="Quality Analysis Dashboard",
         page_icon=":bar_chart:",
         layout="wide"
     )
 
     # 사이드바 메뉴
     menu = st.sidebar.selectbox(
-        "메뉴 선택",
+        "Select Menu",
         [
-            "데이터 업로드&변환",
-            "데이터 검증",
-            "품질 분석",
-            "변환 데이터 다운로드",
-            "설정"
+            "Upload and Convert DATA",
+            "DATA Verification",
+            "Quality Analysis",
+            "Download conversion data",
+            "Setting"
         ]
     )
 
@@ -42,19 +42,19 @@ def main():
         st.session_state.transformed_data = None
 
     # 메뉴에 따른 페이지 라우팅
-    if menu == "데이터 업로드&변환":
+    if menu == "Upload and Convert DATA":
         data_upload_page()
-    elif menu == "데이터 검증":
+    elif menu == "DATA Verification":
         data_verification_page()
-    elif menu == "품질 분석":
+    elif menu == "Quality Analysis":
         quality_analysis_page()
-    elif menu == "변환 데이터 다운로드":
+    elif menu == "Download conversion data":
         download_data_page()
-    elif menu == "설정":
+    elif menu == "Setting":
         settings_page()
 
     # 사이트바에 세션 초기화 버튼 추가
-    if st.sidebar.button("세션 초기화"):
+    if st.sidebar.button("Initialize the session"):
         for key in list(st.session_state.keys()):
             del st.session_state[key]
         st.rerun()

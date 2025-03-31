@@ -9,13 +9,13 @@ from modules.file_handler import upload_excel_file
 
 def data_upload_page():
     """데이터 업로드 및 변환 페이지 (Data Upload and Transformation Page)"""
-    st.header("데이터 업로드 및 변환")
+    st.header("Upload and Convert DATA")
 
     # 파일 업로드
-    input_file = st.file_uploader("📄 측정값 Excel 파일 업로드", type=['xlsx', 'xls'])
-    master_file = st.file_uploader("📄 마스터 키 Excel 파일 업로드", type=["xlsx"])
-    start_date = st.date_input("시작 날짜", value=None)
-    end_date = st.date_input("종료 날짜", value=None)
+    input_file = st.file_uploader("📄 Upload Measurement Excel File", type=['xlsx', 'xls'])
+    master_file = st.file_uploader("📄 Upload Master Excel File", type=["xlsx"])
+    start_date = st.date_input("Start Date", value=None)
+    end_date = st.date_input("End Date", value=None)
 
     if input_file and master_file and start_date and end_date:
         try:
@@ -26,15 +26,15 @@ def data_upload_page():
                 end_date=end_date
             )
 
-            st.success("✅ 변환 완료!")
+            st.success("✅ Success!")
 
             # 변환된 데이터 미리보기
-            st.subheader("변환된 데이터 미리보기")
+            st.subheader("Preview converted data")
             st.dataframe(transformed_df.head())
 
             # 추가 정보 표시
-            st.write(f"총 행 수: {len(transformed_df)}")
-            st.write(f"총 열 수: {len(transformed_df.columns)}")
+            st.write(f"Total number of rows: {len(transformed_df)}")
+            st.write(f"Total number of columns: {len(transformed_df.columns)}")
 
         except Exception as e:
-            st.error(f"데이터 변환 중 오류 발생: {e}")
+            st.error(f"Error during data conversion: {e}")
