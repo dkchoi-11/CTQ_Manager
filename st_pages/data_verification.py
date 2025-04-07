@@ -27,7 +27,7 @@ def data_verification_page():
         st.info("Specification information not found.")
 
     # 이상치 탐지 옵션
-    verify_result_df = verify_data()
+    verify_result_df, add_spec_over_df = verify_data()
 
     st.subheader("📊 Over Specification Detection Results")
     st.write(f"Total number of data: {len(df)}")
@@ -47,7 +47,7 @@ def data_verification_page():
         # 엑셀로 다운로드 버튼 추가
         output = io.BytesIO()
         with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-            verify_result_df.to_excel(writer, index=False, sheet_name='Spec Over Data')
+            add_spec_over_df.to_excel(writer, index=False, sheet_name='Spec Over Data')
 
         st.download_button(
             label="📥 Download over-spec data Excel",

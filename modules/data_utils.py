@@ -58,9 +58,14 @@ def verify_data():
             (merged_df["LSL"].notnull() & (merged_df["측정값"] < merged_df["LSL"]))
     )
 
+    # 원본 데이터에 spec_over 추가 벗어난 경우 NG 표기.
+    merged_df["spec_over"] =""
+    merged_df.loc[over_condition, 'spec_over'] = "NG"
+    merged_df = merged_df.drop(columns=merged_df.columns[[12,13]])
+
     spec_over_data = merged_df[over_condition].copy()
 
-    return spec_over_data
+    return spec_over_data, merged_df
 
 def get_spec_for_measured_ctq():
     """

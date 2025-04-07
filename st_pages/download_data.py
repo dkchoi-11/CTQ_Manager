@@ -47,9 +47,13 @@ def download_data_page():
         return
 
     # 스펙 오버 데이타가 포함되어 있으면 다운로드 안되게...
-    verify_result_df = verify_data()
+    verify_result_df, _ = verify_data()
     if not verify_result_df.empty:
-        st.warning("You can't download it because it includes Spec ovor Data. Check the data")
+        st.warning("""
+        You can't download it because it includes Spec over Data. Check the data.
+        
+        Please re-upload the corrected or re-verified data without Spec Over before downloading.
+        """)
         return
 
     df = st.session_state.transformed_data
