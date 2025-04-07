@@ -100,7 +100,10 @@ def extract_measurement_data(
             if "POINT" in str(cell_value).strip().upper():
                 ctq_col = col + 1
                 if ctq_col < df.shape[1]:
-                    ctq_name = df.iloc[i, ctq_col]
+                    # 4/3일 Master 파일의 공정ctq/ctp 관리 항목명에 -을 공백으로 변경.
+                    # Data 관리하는 시트에서 CTQ 명에 -을 없애라고 공지를 했으나, 없애지 않은 경우 대비하여
+                    # - 있는 경우 공백으로 변경하도록 함.
+                    ctq_name = df.iloc[i, ctq_col].replace('-', ' ').strip()
                     if pd.notna(ctq_name):
                         point_indices.append((i, ctq_name))
                 break
