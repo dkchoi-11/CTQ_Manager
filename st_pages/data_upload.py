@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+from datetime import date
 
 
 # 모듈 import
@@ -11,11 +12,18 @@ def data_upload_page():
     """데이터 업로드 및 변환 페이지 (Data Upload and Transformation Page)"""
     st.header("Upload and Convert DATA")
 
+    file_col1, file_col2 =st.columns(2)
+    date_col1, date_col2 =st.columns(2)
+
     # 파일 업로드
-    input_file = st.file_uploader("📄 Upload Measurement Excel File", type=['xlsx', 'xls'])
-    master_file = st.file_uploader("📄 Upload Master Excel File", type=["xlsx"])
-    start_date = st.date_input("Start Date", value=None)
-    end_date = st.date_input("End Date", value=None)
+    with file_col1:
+        input_file = st.file_uploader("📄 Upload Measurement Excel File", type=['xlsx', 'xls'])
+    with file_col2:
+        master_file = st.file_uploader("📄 Upload Master Excel File", type=["xlsx"])
+    with date_col1:
+        start_date = st.date_input("Start Date", value=None)
+    with date_col2:
+        end_date = st.date_input("End Date", value=date.today())
 
     if input_file and master_file and start_date and end_date:
         try:
