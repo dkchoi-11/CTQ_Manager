@@ -17,13 +17,13 @@ def data_upload_page():
 
     # 파일 업로드
     with file_col1:
-        input_file = st.file_uploader("📄 Upload Measurement Excel File", type=['xlsx', 'xls'])
+        input_file = st.file_uploader("📄 Upload Measurement Excel File", type=['xlsx', 'xls'], key="input_file")
     with file_col2:
-        master_file = st.file_uploader("📄 Upload Master Excel File", type=["xlsx"])
+        master_file = st.file_uploader("📄 Upload Master Excel File", type=["xlsx"], key="master_file")
     with date_col1:
-        start_date = st.date_input("Start Date", value=None)
+        start_date = st.date_input("Start Date", value=None, key="start_date")
     with date_col2:
-        end_date = st.date_input("End Date", value=date.today())
+        end_date = st.date_input("End Date", value=date.today(), key="end_date")
 
     if input_file and master_file and start_date and end_date:
         try:
