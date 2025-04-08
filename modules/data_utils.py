@@ -37,17 +37,17 @@ def verify_data():
     spec_df = get_spec_from_master()
     if spec_df.empty:
         st.warning("스펙 데이타가 없습니다.")
-        return pd.DataFrame()
+        return pd.DataFrame(), pd.DataFrame()
 
     if "transformed_data" not in st.session_state:
         st.warning("변환된 데이터가 없습니다.")
-        return pd.DataFrame()
+        return pd.DataFrame(), pd.DataFrame()
 
     df = st.session_state.transformed_data.copy()
 
     if "관리번호" not in df.columns or "측정값" not in df.columns:
         st.error("transformed_data에 '관리번호' 또는 '측정값' 컬럼이 없습니다.")
-        return pd.DataFrame()
+        return pd.DataFrame(), pd.DataFrame()
 
     # 스펙과 transformed_data 병합
     merged_df = pd.merge(df, spec_df, on="관리번호", how="left")
