@@ -12,3 +12,4 @@ from .session_manager import (
     initialize_session_state, reset_session_state,
     update_session_data, get_session_data, display_session_reset_button
 )
+from .visitor_count import get_visitor_count, increment_visitor_count

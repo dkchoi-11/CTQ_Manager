@@ -6,6 +6,8 @@ import os
 project_root = os.path.abspath(os.path.dirname(__file__))
 sys.path.insert(0, project_root)
 
+# visitor 모듈 import
+from modules import get_visitor_count, increment_visitor_count
 # 페이지 모듈 import
 from st_pages import (
     data_upload_page,
@@ -54,13 +56,22 @@ def main():
         settings_page()
 
     # 사이트바에 세션 초기화 버튼 추가
-    if st.sidebar.button("Initialize the session"):
-        for key in list(st.session_state.keys()):
-            del st.session_state[key]
-        st.rerun()
+    #if st.sidebar.button("Initialize the session"):
+    #    for key in list(st.session_state.keys()):
+    #        del st.session_state[key]
+    #    st.rerun()
+
+
+    # 방문자 카운트
+    if "visited" not in st.session_state:
+        st.session_state.visited = True
+        visitor_count = increment_visitor_count()
+    else:
+        visitor_count = get_visitor_count()
 
     # 푸터
     st.markdown("---")
+    st.markdown(f"방문자 수:{visitor_count}명")
     st.markdown("© CTQ Data 관리 대시보드 | Last Update: 2025/03/31")
     st.markdown("문의: [daekyu.choi@newoptics.net](mailto:daekyu.choi@newoptics.net)")
 
