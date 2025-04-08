@@ -33,11 +33,11 @@ def data_upload_page():
     with date_col2:
         st.date_input("End Date", value=st.session_state.end_date, key="end_date")
 
-        # 위젯 값들은 session_state에서 읽기
-        input_file = st.session_state.get("input_file")
-        master_file = st.session_state.get("master_file")
-        start_date = st.session_state.get("start_date")
-        end_date = st.session_state.get("end_date")
+    # 위젯 값들은 session_state에서 읽기
+    input_file = st.session_state.get("input_file")
+    master_file = st.session_state.get("master_file")
+    start_date = st.session_state.get("start_date")
+    end_date = st.session_state.get("end_date")
 
     # 모든 입력이 있을 때 처리
     if input_file and master_file and start_date and end_date:
