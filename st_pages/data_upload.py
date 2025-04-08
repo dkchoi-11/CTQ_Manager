@@ -11,9 +11,6 @@ def data_upload_page():
     """데이터 업로드 및 변환 페이지 (Data Upload and Transformation Page)"""
     st.header("Upload and Convert DATA")
 
-    file_col1, file_col2 =st.columns(2)
-    date_col1, date_col2 =st.columns(2)
-
     # 기본 세션 상태 초기화
     if "input_file" not in st.session_state:
         st.session_state.input_file = None
@@ -24,31 +21,34 @@ def data_upload_page():
     if "end_date" not in st.session_state:
         st.session_state.end_date = date.today()
 
-        # 파일 업로드
-        with file_col1:
-            input_file = st.file_uploader(
-                "📄 Upload Measurement Excel File", type=['xlsx', 'xls'],
-                key="input_file"
-            )
+    file_col1, file_col2 =st.columns(2)
+    date_col1, date_col2 =st.columns(2)
 
-        with file_col2:
-            master_file = st.file_uploader(
-                "📄 Upload Master Excel File", type=["xlsx"],
-                key="master_file"
-            )
+    # 파일 업로드
+    with file_col1:
+        input_file = st.file_uploader(
+            "📄 Upload Measurement Excel File", type=['xlsx', 'xls'],
+            key="input_file"
+        )
 
-        # 날짜 선택
-        with date_col1:
-            start_date = st.date_input(
-                "Start Date", value=st.session_state.start_date,
-                key="start_date"
-            )
+    with file_col2:
+        master_file = st.file_uploader(
+            "📄 Upload Master Excel File", type=["xlsx"],
+            key="master_file"
+        )
 
-        with date_col2:
-            end_date = st.date_input(
-                "End Date", value=st.session_state.end_date,
-                key="end_date"
-            )
+    # 날짜 선택
+    with date_col1:
+        start_date = st.date_input(
+            "Start Date", value=st.session_state.start_date,
+            key="start_date"
+        )
+
+    with date_col2:
+        end_date = st.date_input(
+            "End Date", value=st.session_state.end_date,
+            key="end_date"
+        )
 
     # 모든 입력이 있을 때 처리
     if st.session_state.input_file and st.session_state.master_file and \
