@@ -142,7 +142,7 @@ def extract_measurement_data(
 
 # 관리번호를 매핑하는 함수
 def add_management_code(results_df: pd.DataFrame, master_key_df: pd.DataFrame) -> pd.DataFrame:
-    merge_keys = ["1차 업체명", "지역명", "2차업체명", "모델명", "부품명", "CTQ/P 관리항목명"]
+    merge_keys = ["1차 업체명", "지역명", "2차업체명", "부품명", "CTQ/P 관리항목명", "모델명", "Part No"]
 
     master_key_df_renamed = master_key_df.rename(columns={
         "부품": "부품명",

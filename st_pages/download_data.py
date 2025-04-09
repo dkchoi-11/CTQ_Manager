@@ -57,7 +57,8 @@ def download_data_page():
         return
 
     df = st.session_state.transformed_data
-    df['2차업체명'] = df['2차업체명'].replace('nan', '')
+    df["2차업체명"] = df["2차업체명"].replace("nan", "")
+    df["Part No"] = df["Part No"].replace("nan", "")
 
     # 다운로드 옵션
     download_type = st.selectbox("Select data to download", [
