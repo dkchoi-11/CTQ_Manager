@@ -62,13 +62,6 @@ def main():
     #    st.rerun()
 
 
-    # 방문자 카운트
-    if "visited" not in st.session_state:
-        st.session_state.visited = True
-        visitor_count = increment_visitor_count()
-    else:
-        visitor_count = get_visitor_count()
-
     # 푸터
     st.markdown("---")
     st.markdown(f"방문자 수:{visitor_count}명")
