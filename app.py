@@ -6,8 +6,6 @@ import os
 project_root = os.path.abspath(os.path.dirname(__file__))
 sys.path.insert(0, project_root)
 
-# visitor 모듈 import
-from modules import get_visitor_count, increment_visitor_count
 # 페이지 모듈 import
 from st_pages import (
     data_upload_page,
