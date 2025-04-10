@@ -11,7 +11,7 @@ credentials = ServiceAccountCredentials.from_json_keyfile_dict(credentials_dict,
 
 # 구글 시트 접근
 client = gspread.authorize(credentials)
-sheet = client.open("VisitorCounter").sheet1
+sheet = client.open("VisitorCounter").count
 
 def get_visitor_count():
     try:
