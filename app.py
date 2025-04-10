@@ -64,7 +64,6 @@ def main():
 
     # 푸터
     st.markdown("---")
-    st.markdown(f"방문자 수:{visitor_count}명")
     st.markdown("© CTQ Data 관리 대시보드 | Last Update: 2025/03/31")
     st.markdown("문의: [daekyu.choi@newoptics.net](mailto:daekyu.choi@newoptics.net)")
 
