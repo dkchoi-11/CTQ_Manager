@@ -1,21 +1,26 @@
-import os
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+import streamlit as st
+
+# Google Sheets 연동을 위한 설정
+scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+
+# Streamlit secrets.toml에서 credentials 가져오기
+credentials_dict = st.secrets["gcp_service_account"]
+credentials = ServiceAccountCredentials.from_json_keyfile_dict(credentials_dict, scope)
+
+# 구글 시트 접근
+client = gspread.authorize(credentials)
+sheet = client.open("VisitorCounter").sheet1
 
 def get_visitor_count():
-    file_path = os.path.join("data", "visitor_count.txt")
-    if not os.path.exists(file_path):
-        with open(file_path,"w") as f:
-            f.write("0")
-
-    with open(file_path,"r") as f:
-        count = int(f.read().strip())
-
-    return count
+    try:
+        value = sheet.acell("A1").value
+        return int(value)
+    except Exception:
+        return 0
 
 def increment_visitor_count():
-    file_path = os.path.join("data", "visitor_count.txt")
     count = get_visitor_count() + 1
-
-    with open(file_path, "w") as f:
-        f.write(str(count))
-
+    sheet.update_acell("A1", str(count))
     return count
