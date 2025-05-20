@@ -47,6 +47,12 @@ def data_upload_page():
     start_date = st.session_state.get("start_date")
     end_date = st.session_state.get("end_date")
 
+    # 임시 디버그
+    if master_file is not None:
+        st.write("📁 Master File uploaded:", master_file.name)
+    else:
+        st.warning("Please upload the Master Excel file.")
+
 
     # 모든 입력이 있을 때 처리
     if input_file and master_file and start_date and end_date:

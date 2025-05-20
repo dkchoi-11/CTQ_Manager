@@ -175,10 +175,10 @@ def transform_data(
         search_cols: List[int] = list(range(0, 11))
 ) -> pd.DataFrame:
 
-    info_df = pd.read_excel(input_file, sheet_name="Information")
+    info_df = pd.read_excel(input_file, sheet_name="Information", engine="openpyxl")
     info_dict = info_df.set_index("Contents")['Value'].to_dict()
 
-    original_df = pd.read_excel(input_file, sheet_name=info_dict["Data_sheet"], header=None)
+    original_df = pd.read_excel(input_file, sheet_name=info_dict["Data_sheet"], header=None, engine="openpyxl")
     master_df = pd.read_excel(master_file, sheet_name="Master", engine="openpyxl")
     st.session_state.master_data = master_df
 
