@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
-from datetime import date
-
+from datetime import date, timedelta
 
 # 모듈 import
 from modules.data_transformer import transform_data
@@ -11,11 +10,14 @@ def data_upload_page():
     """데이터 업로드 및 변환 페이지 (Data Upload and Transformation Page)"""
     st.header("Upload and Convert DATA")
 
-    # 기본 세션 상태 초기화
+    """ 기본 세션 상태 초기화
     if "start_date" not in st.session_state:
-        st.session_state.start_date = None
+        st.session_state.start_date = date.today() - timedelta(days=7)
     if "end_date" not in st.session_state:
         st.session_state.end_date = date.today()
+    """
+    default_start = date.today() - timedelta(days=7)
+    default_end = date.today()
 
     file_col1, file_col2 =st.columns(2)
     date_col1, date_col2 =st.columns(2)
@@ -26,12 +28,18 @@ def data_upload_page():
 
     with file_col2:
         st.file_uploader("📄 Upload Master Excel File", type=["xlsx"], key="master_file")
-
+    """
     with date_col1:
         st.date_input("Start Date", value=st.session_state.start_date, key="start_date")
 
     with date_col2:
         st.date_input("End Date", value=st.session_state.end_date, key="end_date")
+    """
+    with date_col1:
+        st.date_input("Start Date", value=st.session_state.get("start_date", default_start), key="start_date")
+
+    with date_col2:
+        st.date_input("End Date", value=st.session_state.get("end_date", default_end), key="end_date")
 
     # 위젯 값들은 session_state에서 읽기
     input_file = st.session_state.get("input_file")
