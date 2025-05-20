@@ -179,7 +179,7 @@ def transform_data(
     info_dict = info_df.set_index("Contents")['Value'].to_dict()
 
     original_df = pd.read_excel(input_file, sheet_name=info_dict["Data_sheet"], header=None)
-    master_df = pd.read_excel(master_file, sheet_name="Master")
+    master_df = pd.read_excel(master_file, sheet_name="Master", engine="openpyxl")
     st.session_state.master_data = master_df
 
     date_row_idx = find_date_row(original_df)
