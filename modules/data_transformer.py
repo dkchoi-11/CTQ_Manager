@@ -37,7 +37,6 @@ def find_date_start_col(df: pd.DataFrame, sample_row_count: int = 10) -> int:
     if date_counts[best_col] == 0:
         raise ValueError("No date column found")
 
-    print(best_col)
     return best_col
 
 # 날짜가 포함된 첫 번째 행의 인덱스를 찾는 함수
@@ -122,8 +121,14 @@ def extract_measurement_data(
         for i in range(start_idx, end_idx):
             for col in date_mapping:
                 if col < df.shape[1] and i < df.shape[0]:
-                    value = df.iloc[i, col]
-                    if pd.notna(value):
+                    raw_value = df.iloc[i, col]
+                    if pd.notna(raw_value):
+                        value = str(raw_value).strip().replace("\xa0", "")  # 공백 및 특수공백 제거
+                        try:
+                            value = float(value)
+                        except ValueError:
+                            value = None  # 숫자로 변환 불가한 경우 None 처리
+
                         results.append({
                             '1차 업체명': str(info_dict.get("1차 업체명", "")).strip(),
                             '지역명': str(info_dict.get("지역명", "")).strip(),
@@ -180,6 +185,19 @@ def transform_data(
 
     original_df = pd.read_excel(input_file, sheet_name=info_dict["Data_sheet"], header=None, engine="openpyxl")
     master_df = pd.read_excel(master_file, sheet_name="Master", engine="openpyxl")
+
+    # 25.6.20 수정
+    # master file의 LSL, Target 값의 끝에 공백이 있어서 숫자형으로 아니고 object로 정의됨
+    # 그래서 특수공백 제거하고 숫자 변환 처리 추가함.
+    for col in ["USL", "LSL", "Target", "UCL", "LCL"]:
+        master_df[col] = (
+            master_df[col]
+            .astype(str)  # 우선 문자열로 변환
+            .str.replace(r"[^\d\.\-]", "", regex=True)  # 숫자, 소수점, 음수부호 외 제거
+            .replace("", np.nan)  # 빈 문자열은 np.nan으로 처리
+            .astype(float)  # 최종적으로 float 변환
+        )
+
     st.session_state.master_data = master_df
 
     date_row_idx = find_date_row(original_df)
