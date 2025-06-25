@@ -51,6 +51,7 @@ def get_excel_download_buffer(df: pd.DataFrame, sheet_name="toLGE") -> BytesIO:
 
 # 자동 파일명 생성 함수
 def generate_filename(df: pd.DataFrame) -> str:
+    st.dataframe(df)
     if df is None or df.empty:
         return "empty_data"
     try:
@@ -59,12 +60,19 @@ def generate_filename(df: pd.DataFrame) -> str:
         second_company = clean_string(df['2차업체명'].unique()[0])
         model = clean_string(df['모델명'].unique()[0])
         part_name = clean_string(df['부품명'].unique()[0])
+        ctq_name = clean_string(df['CTQ/P 관리항목명'].unique()[0])
 
         df["측정일자"] = pd.to_datetime(df["측정일자"])
         start_date = df["측정일자"].min().strftime("%Y%m%d")
         end_date = df["측정일자"].max().strftime("%Y%m%d")
 
-        return f"CTQ_{first_company}_{region}_{second_company}_{model}_{part_name}_{start_date}_{end_date}.xlsx"
+        if ctq_name == "Torque":
+            save_filename = f"CTQ_{first_company}_{region}_{second_company}_{model}_{part_name}_{ctq_name}_{start_date}_{end_date}.xlsx"
+        else:
+            save_filename = f"CTQ_{first_company}_{region}_{second_company}_{model}_{part_name}_{start_date}_{end_date}.xlsx"
+
+        #return f"CTQ_{first_company}_{region}_{second_company}_{model}_{part_name}_{start_date}_{end_date}.xlsx"
+        return save_filename
     except Exception as e:
         st.warning("파일명 생성 오류:", e)
         return "generated_file.xlsx"
