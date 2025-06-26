@@ -6,6 +6,7 @@ import pandas as pd
 import streamlit as st
 from typing import Union
 from io import BytesIO
+from datetime import datetime
 
 # 문자열 정리 함수
 def clean_string(s):
@@ -62,14 +63,15 @@ def generate_filename(df: pd.DataFrame) -> str:
         part_name = clean_string(df['부품명'].unique()[0])
         ctq_name = clean_string(df['CTQ/P 관리항목명'].unique()[0])
 
-        df["측정일자"] = pd.to_datetime(df["측정일자"])
-        start_date = df["측정일자"].min().strftime("%Y%m%d")
-        end_date = df["측정일자"].max().strftime("%Y%m%d")
+        #df["측정일자"] = pd.to_datetime(df["측정일자"])
+        #start_date = df["측정일자"].min().strftime("%Y%m%d")
+        #end_date = df["측정일자"].max().strftime("%Y%m%d")
+        file_date = datetime.today().strftime("%Y%m%d")
 
         if ctq_name == "Torque":
-            save_filename = f"CTQ_{first_company}_{region}_{second_company}_{model}_{part_name}_{ctq_name}_{start_date}_{end_date}.xlsx"
+            save_filename = f"CTQ_{first_company}_{region}_{second_company}_{model}_{part_name}_{ctq_name}_{file_date}.xlsx"
         else:
-            save_filename = f"CTQ_{first_company}_{region}_{second_company}_{model}_{part_name}_{start_date}_{end_date}.xlsx"
+            save_filename = f"CTQ_{first_company}_{region}_{second_company}_{model}_{part_name}_{file_date}.xlsx"
 
         #return f"CTQ_{first_company}_{region}_{second_company}_{model}_{part_name}_{start_date}_{end_date}.xlsx"
         return save_filename
